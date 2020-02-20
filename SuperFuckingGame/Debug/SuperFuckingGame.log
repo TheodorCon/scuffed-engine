@@ -1,0 +1,3 @@
+﻿  main.cpp
+D:\C++\SuperFuckingGame\SuperFuckingGame\main.h(76,21): warning C4018: '<': signed/unsigned mismatch
+  SuperFuckingGame.vcxproj -> D:\C++\SuperFuckingGame\Debug\SuperFuckingGame.exe
