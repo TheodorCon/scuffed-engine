@@ -1,6 +1,3 @@
-﻿  generalGame.cpp
-  main.cpp
-E:\SchoolDump\SelectedTopicsInSuicidalTendencies\scuffedengine\SuperFuckingGame\generalGame.cpp(89,20): warning C4018:  '<': signed/unsigned mismatch
-  Generating Code...
-E:\SchoolDump\SelectedTopicsInSuicidalTendencies\scuffedengine\SuperFuckingGame\main.h(76,21): warning C4018:  '<': signed/unsigned mismatch
+﻿  main.cpp
+E:\SchoolDump\SelectedTopicsInSuicidalTendencies\scuffedengine\SuperFuckingGame\main.h(116,21): warning C4018:  '<': signed/unsigned mismatch
   SuperFuckingGame.vcxproj -> E:\SchoolDump\SelectedTopicsInSuicidalTendencies\scuffedengine\Debug\SuperFuckingGame.exe

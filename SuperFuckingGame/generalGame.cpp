@@ -14,8 +14,6 @@ RenderFunc::~RenderFunc()
 
 bool GeneralGame::setup()
 {
-	SDL_Init(SDL_INIT_VIDEO);
-
 	bool success = false;
 
 	window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
@@ -48,7 +46,7 @@ void GeneralGame::start()
 	}
 }
 
-void GeneralGame::initialize() 
+void GeneralGame::initialize()
 {
 
 }
@@ -62,6 +60,8 @@ void GeneralGame::input()
 		{
 			running = false;
 		}
+		else
+			input(event);
 	}
 }
 
@@ -75,8 +75,13 @@ void GeneralGame::input(void (*inputFunc)())
 		{
 			running = false;
 		}
-		inputFunc();
+		else
+			input(event);
 	}
+}
+
+void GeneralGame::input(SDL_Event event)
+{
 }
 
 void GeneralGame::update()
@@ -85,7 +90,6 @@ void GeneralGame::update()
 
 void GeneralGame::render()
 {
-
 	for (int i = 0; i < rends.capacity(); i++)
 	{
 		rends[i].rendFunc();
@@ -102,6 +106,20 @@ void GeneralGame::quit()
 {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+}
+
+GeneralGame::GeneralGame()
+{
+
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_DisplayMode DM;
+	SDL_GetDesktopDisplayMode(0, &DM);
+	int width = DM.w;
+	int height = DM.h;
+	SCREEN_WIDTH = width;
+	SCREEN_HEIGHT = height;
+	const char* untitledName = "Untitled";
+	TITLE = const_cast<char*>(untitledName);
 }
 
 GeneralGame::GeneralGame(int width, int height)

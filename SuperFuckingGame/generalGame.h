@@ -23,6 +23,7 @@ private:
 class GeneralGame
 {
 public:
+	GeneralGame();
 	GeneralGame(int width, int height);
 	GeneralGame(int width, int height, char* title);
 	~GeneralGame();
@@ -49,5 +50,6 @@ public:
 	virtual void render();
 	virtual void input();
 	virtual void input(void (*func)());
+	virtual void input(SDL_Event event);
 	virtual void quit();
 };
