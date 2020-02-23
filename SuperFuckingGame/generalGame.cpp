@@ -1,7 +1,6 @@
 #include "generalGame.h"
 #include <SDL.h>
 
-
 RenderFunc::RenderFunc(void (*func)(), SDL_Color clr)
 {
 	rendFunc = func;
@@ -16,11 +15,14 @@ bool GeneralGame::setup()
 {
 	bool success = false;
 
-	window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow(TITLE, 
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+		SCREEN_WIDTH, SCREEN_HEIGHT, 
+		SDL_WINDOW_OPENGL | (FULLSCREEN ? NULL : SDL_WINDOW_RESIZABLE));
 
 	if (window != NULL)
 	{
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 		if (renderer != NULL)
 		{
 			running = true;
@@ -40,6 +42,8 @@ void GeneralGame::start()
 		while (running)
 		{
 			input();
+			inputEvent();
+			updateScene();
 			update();
 			render();
 		}
@@ -51,7 +55,7 @@ void GeneralGame::initialize()
 
 }
 
-void GeneralGame::input()
+void GeneralGame::inputEvent()
 {
 	SDL_Event event;
 	if (SDL_PollEvent(&event))
@@ -65,19 +69,8 @@ void GeneralGame::input()
 	}
 }
 
-void GeneralGame::input(void (*inputFunc)())
+void GeneralGame::input()
 {
-	SDL_Event event;
-	SDL_WaitEvent(&event);
-	if (SDL_PollEvent(&event))
-	{
-		if (event.type == SDL_QUIT)
-		{
-			running = false;
-		}
-		else
-			input(event);
-	}
 }
 
 void GeneralGame::input(SDL_Event event)
@@ -88,13 +81,24 @@ void GeneralGame::update()
 {
 }
 
+void GeneralGame::updateScene() 
+{
+	for (size_t i = 0; i < Scene.size(); i++)
+	{
+		Scene[i]->update();
+	}
+}
+
 void GeneralGame::render()
 {
-	for (int i = 0; i < rends.capacity(); i++)
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	for (size_t i = 0; i < Scene.size(); i++)
 	{
-		rends[i].rendFunc();
+		Scene[i]->render(renderer);
 	}
 
+	SDL_RenderPresent(renderer);
 }
 
 void GeneralGame::pause()
@@ -108,17 +112,21 @@ void GeneralGame::quit()
 	SDL_Quit();
 }
 
+void GeneralGame::instantiate(GameObject* gameObject)
+{
+	Scene.push_back(gameObject);
+}
+
 GeneralGame::GeneralGame()
 {
+	SDL_Init(SDL_INIT_EVERYTHING);
 
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_DisplayMode DM;
-	SDL_GetDesktopDisplayMode(0, &DM);
-	int width = DM.w;
-	int height = DM.h;
-	SCREEN_WIDTH = width;
-	SCREEN_HEIGHT = height;
-	const char* untitledName = "Untitled";
+	SDL_DisplayMode displayMode;
+	SDL_GetDesktopDisplayMode(0, &displayMode);
+	SCREEN_WIDTH = displayMode.w;
+	SCREEN_HEIGHT = displayMode.h;
+	FULLSCREEN = true;
+	const char* untitledName = "Super Fucking Game";
 	TITLE = const_cast<char*>(untitledName);
 }
 

@@ -4,40 +4,10 @@
 #include <stdio.h>
 #include "generalGame.h"
 
-class IRenderable
+class Player : public GameObject
 {
 public:
-	virtual void render(SDL_Renderer* renderer) = 0;
-private:
-
-};
-
-struct Vector2
-{
-	int x = 0;
-	int y = 0;
-
-	Vector2 operator + (Vector2 const& obj)
-	{
-		Vector2 result;
-
-		result.x = x + obj.x;
-		result.y = y + obj.y;
-
-		return result;
-	}
-
-	void operator += (Vector2 const& obj)
-	{
-		x += obj.x;
-		y += obj.y;
-	}
-};
-
-class Player : public IRenderable
-{
-public:
-	Player(Vector2 pos);
+	Player();
 	~Player();
 
 	Vector2 position;
@@ -65,13 +35,17 @@ public:
 		position += vect;
 	}
 
+	void initialize() {};
+	void update() {}
+
+
 private:
 
 };
 
-Player::Player(Vector2 pos)
+Player::Player()
 {
-	position = pos;
+	position = { 0,0 };
 }
 
 Player::~Player()
@@ -85,66 +59,55 @@ public:
 	{
 		this->SCREEN_WIDTH = width;
 		this->SCREEN_HEIGHT = height;
+		player = new Player();
 	}
 	MainGame() :GeneralGame()
 	{
+		player = new Player();
 	}
-	~MainGame();
+	~MainGame() {};
 
 	Player* player;
 
-	std::vector<IRenderable*> Scene = {};
-
 	void initialize()
 	{
-		Vector2 pos;
-		pos.x = SCREEN_WIDTH / 2;
-		pos.y = SCREEN_HEIGHT / 2;
-		player = new Player(pos);
-		Scene.push_back(player);
-	}
-
-	void render()
-	{
-		SDL_Rect rect;
-		rect.x = 0;
-		rect.y = 0;
-		rect.h = SCREEN_HEIGHT;
-		rect.w = SCREEN_WIDTH;
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &rect);
-		for (int i = 0; i < Scene.size(); i++)
-		{
-			Scene[i]->render(renderer);
-		}
-		SDL_RenderPresent(renderer);
+		Vector2 pos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+		player->position = pos;
+		instantiate(player);
 	}
 
 	void input(SDL_Event event)
 	{
-		switch (event.type)
-		{
+		//switch (event.type)
+		//{
+		//default:
+		//	break;
+		//}
+	}
 
-		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym)
-			{
-			case SDLK_a:
-				player->transform(-2, 0);
-				break;
-			case SDLK_s:
-				player->transform(0, 2);
-				break;
-			case SDLK_d:
-				player->transform(2, 0);
-				break;
-			case SDLK_w:
-				player->transform(0, -2);
-				break;
-			default:
-				break;
-			}
-		default:
-			break;
+	void update()
+	{
+		const Uint8* keyboard = SDL_GetKeyboardState(NULL);
+
+		if (keyboard[SDL_SCANCODE_A])
+		{
+			player->transform(-5, 0);
+
+		}
+		if (keyboard[SDL_SCANCODE_D])
+		{
+			player->transform(5, 0);
+
+		}
+		if (keyboard[SDL_SCANCODE_S])
+		{
+			player->transform(0, 5);
+
+		}
+		if (keyboard[SDL_SCANCODE_W])
+		{
+			player->transform(0, -5);
+
 		}
 	}
 
@@ -155,8 +118,7 @@ int main(int argc, char* argv[])
 {
 	MainGame* game = new MainGame();
 	game->start();
+
 	game->quit();
 	return 0;
 }
-
-
