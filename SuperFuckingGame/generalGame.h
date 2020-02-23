@@ -6,6 +6,157 @@
 #ifndef GeneralGame
 #endif
 
+struct Vector2
+{
+	int x = 0;
+	int y = 0;
+
+	Vector2 operator +(Vector2 const& obj)
+	{
+		Vector2 result;
+
+		result.x = x + obj.x;
+		result.y = y + obj.y;
+
+		return result;
+	}
+
+	void operator +=(Vector2 const& obj)
+	{
+		x += obj.x;
+		y += obj.y;
+	}
+	void operator -(Vector2 const& obj)
+	{
+		x -= obj.x;
+		y -= obj.y;
+	}
+	Vector2 operator -=(Vector2 const& obj)
+	{
+		Vector2 result;
+		result.x = x - obj.x;
+		result.y = y - obj.y;
+		return result;
+	}
+	Vector2 operator -()
+	{
+		Vector2 result;
+		result.x = -x;
+		result.y = -y;
+		return result;
+	}
+	Vector2 operator *(int scalar)
+	{
+		Vector2 result;
+		result.x = x * scalar;
+		result.y = y * scalar;
+		return result;
+	}
+	Vector2 operator *(int scalar) const
+	{
+		Vector2 result;
+		result.x = x * scalar;
+		result.y = y * scalar;
+		return result;
+	}
+	Vector2 operator /(int scalar)
+	{
+		Vector2 result;
+		result.x = x / scalar;
+		result.y = y / scalar;
+		return result;
+	}
+};
+
+//Vector2 operator*(const Vector2 vect, int scalar)
+//{
+//	Vector2 result;
+//	result.x = vect.x * scalar;
+//	result.y = vect.y * scalar;
+//	return result;
+//}
+
+//Vector2 operator*(int scalar, const Vector2 vect)
+//{
+//	Vector2 result;
+//	result.x = vect.x * scalar;
+//	result.y = vect.y * scalar;
+//	return result;
+//}
+
+struct Vector3
+{
+	int x = 0;
+	int y = 0;
+	int z = 0;
+
+	Vector3 operator + (Vector3 const& obj)
+	{
+		Vector3 result;
+
+		result.x = x + obj.x;
+		result.y = y + obj.y;
+		result.z = z + obj.z;
+
+		return result;
+	}
+	void operator += (Vector3 const& obj)
+	{
+		x += obj.x;
+		y += obj.y;
+		z += obj.z;
+	}
+	Vector3 operator - (Vector3 const& obj)
+	{
+		Vector3 result;
+		result.x = x - obj.x;
+		result.y = y - obj.y;
+		result.z = z - obj.z;
+		return result;
+	}
+	void operator -= (Vector3 const& obj)
+	{
+		x -= obj.x;
+		y -= obj.y;
+		z -= obj.z;
+	}
+	Vector3 operator -()
+	{
+		Vector3 result;
+		result.x = -x;
+		result.y = -y;
+		result.z = -z;
+		return result;
+	}
+	Vector3 operator * (int scalar)
+	{
+		Vector3 result;
+		result.x = x * scalar;
+		result.y = y * scalar;
+		result.z = z * scalar;
+		return result;
+	}
+	Vector3 operator / (int scalar)
+	{
+		Vector3 result;
+		result.x = x / scalar;
+		result.y = y / scalar;
+		result.z = z / scalar;
+		return result;
+	}
+};
+
+constexpr struct Vector3 VECTOR3_UP = { 0, 1, 0 };
+constexpr struct Vector3 VECTOR3_DOWN = { 0, -1, 0 };
+constexpr struct Vector3 VECTOR3_RIGHT = { 1, 0, 0 };
+constexpr struct Vector3 VECTOR3_LEFT = { -1, 0, 0 };
+constexpr struct Vector3 VECTOR3_BACK = { 0, 0, -1 };
+constexpr struct Vector3 VECTOR3_FRONT = { 0, 0, 1 };
+constexpr struct Vector2 VECTOR2_DOWN = { 0, 1 };
+constexpr struct Vector2 VECTOR2_UP = { 0, -1 };
+constexpr struct Vector2 VECTOR2_RIGHT = { 1, 0 };
+constexpr struct Vector2 VECTOR2_LEFT = { -1, 0 };
+
 class RenderFunc
 {
 public:
@@ -30,42 +181,29 @@ private:
 
 class GameTransform
 {
-public:	
+public:
+
+	struct Vector2 transform = { 0,0 };
 
 private:
 
 };
 
-struct Vector2
+class GameRigidBody
 {
-	int x = 0;
-	int y = 0;
+public:
 
-	Vector2 operator + (Vector2 const& obj)
-	{
-		Vector2 result;
+private:
 
-		result.x = x + obj.x;
-		result.y = y + obj.y;
+};
 
-		return result;
-	}
+class GameCollider
+{
 
-	void operator += (Vector2 const& obj)
-	{
-		x += obj.x;
-		y += obj.y;
-	}
-	void operator - (Vector2 const& obj)
-	{
-		x -= obj.x;
-		y -= obj.y;
-	}
-	void operator -= (Vector2 const& obj)
-	{
-	  	x -= obj.x;
-		y -= obj.y;
-	}
+public:
+
+private:
+
 };
 
 class GameObject : public GameRender, public GameTransform
@@ -80,7 +218,6 @@ public:
 private:
 
 };
-
 
 class GeneralGame
 {
@@ -114,7 +251,7 @@ public:
 	virtual void input();
 	virtual void input(SDL_Event event);
 	virtual void quit();
- 
+
 	virtual void instantiate(GameObject* gameObject);
 private:
 	virtual void inputEvent();

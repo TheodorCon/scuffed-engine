@@ -11,28 +11,29 @@ public:
 	~Player();
 
 	Vector2 position;
+	int speed = 3;
 
 	void render(SDL_Renderer* renderer)
 	{
 		SDL_Rect rect;
-		rect.x = position.x;
-		rect.y = position.y;
+		rect.x = transform.x;
+		rect.y = transform.y;
 		rect.h = 50;
 		rect.w = 10;
 		SDL_SetRenderDrawColor(renderer, 100, 100, 200, 255);
 		SDL_RenderFillRect(renderer, &rect);
 	}
 
-	void transform(Vector2& vect)
+	void translate(Vector2 vect)
 	{
-		position += vect;
+		transform += vect;
 	}
-	void transform(int x, int y)
+	void translate(int x, int y)
 	{
 		Vector2 vect;
 		vect.x = x;
 		vect.y = y;
-		position += vect;
+		transform += vect;
 	}
 
 	void initialize() {};
@@ -49,6 +50,34 @@ Player::Player()
 }
 
 Player::~Player()
+{
+}
+
+class Platform: public GameObject
+{
+public:
+	Platform();
+	~Platform();
+
+	void render(SDL_Renderer *renderer)
+	{
+		SDL_SetRenderDrawColor(renderer, 200, 100, 150, 255);
+		struct SDL_Rect rect  = {transform.x, transform.y, 500, 100};
+		SDL_RenderFillRect(renderer, &rect);
+	}
+
+	void initialize() {}
+	void update() {}
+
+private:
+
+};
+
+Platform::Platform()
+{
+}
+
+Platform::~Platform()
 {
 }
 
@@ -72,43 +101,41 @@ public:
 	void initialize()
 	{
 		Vector2 pos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-		player->position = pos;
+		player->transform = pos;
 		instantiate(player);
+		Platform *platform = new Platform();
+		platform->transform = {player->transform.x - 250, player->transform.y + 70};
+		instantiate(platform);
 	}
 
-	void input(SDL_Event event)
-	{
-		//switch (event.type)
-		//{
-		//default:
-		//	break;
-		//}
-	}
-
-	void update()
+	void input()
 	{
 		const Uint8* keyboard = SDL_GetKeyboardState(NULL);
 
 		if (keyboard[SDL_SCANCODE_A])
 		{
-			player->transform(-5, 0);
+			player->translate(VECTOR2_LEFT * player->speed);
 
 		}
 		if (keyboard[SDL_SCANCODE_D])
 		{
-			player->transform(5, 0);
+			player->translate(VECTOR2_RIGHT * player->speed);
 
 		}
 		if (keyboard[SDL_SCANCODE_S])
 		{
-			player->transform(0, 5);
+			player->translate(VECTOR2_DOWN * player->speed);
 
 		}
 		if (keyboard[SDL_SCANCODE_W])
 		{
-			player->transform(0, -5);
-
+			player->translate(VECTOR2_UP * player->speed);
 		}
+	}
+
+	void update()
+	{
+	
 	}
 
 private:
