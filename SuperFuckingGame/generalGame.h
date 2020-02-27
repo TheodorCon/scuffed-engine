@@ -26,11 +26,13 @@ struct Vector2
 		x += obj.x;
 		y += obj.y;
 	}
+
 	void operator -(Vector2 const& obj)
 	{
 		x -= obj.x;
 		y -= obj.y;
 	}
+
 	Vector2 operator -=(Vector2 const& obj)
 	{
 		Vector2 result;
@@ -38,6 +40,7 @@ struct Vector2
 		result.y = y - obj.y;
 		return result;
 	}
+
 	Vector2 operator -()
 	{
 		Vector2 result;
@@ -45,20 +48,7 @@ struct Vector2
 		result.y = -y;
 		return result;
 	}
-	Vector2 operator *(int scalar)
-	{
-		Vector2 result;
-		result.x = x * scalar;
-		result.y = y * scalar;
-		return result;
-	}
-	Vector2 operator *(int scalar) const
-	{
-		Vector2 result;
-		result.x = x * scalar;
-		result.y = y * scalar;
-		return result;
-	}
+
 	Vector2 operator /(int scalar)
 	{
 		Vector2 result;
@@ -66,23 +56,11 @@ struct Vector2
 		result.y = y / scalar;
 		return result;
 	}
+
 };
 
-//Vector2 operator*(const Vector2 vect, int scalar)
-//{
-//	Vector2 result;
-//	result.x = vect.x * scalar;
-//	result.y = vect.y * scalar;
-//	return result;
-//}
-
-//Vector2 operator*(int scalar, const Vector2 vect)
-//{
-//	Vector2 result;
-//	result.x = vect.x * scalar;
-//	result.y = vect.y * scalar;
-//	return result;
-//}
+Vector2 operator*(Vector2 const& vect, int scalar);
+Vector2 operator*(int scalar, Vector2 const& vect);
 
 struct Vector3
 {

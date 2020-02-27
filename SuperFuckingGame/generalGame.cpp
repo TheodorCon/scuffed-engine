@@ -15,9 +15,9 @@ bool GeneralGame::setup()
 {
 	bool success = false;
 
-	window = SDL_CreateWindow(TITLE, 
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-		SCREEN_WIDTH, SCREEN_HEIGHT, 
+	window = SDL_CreateWindow(TITLE,
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		SCREEN_WIDTH, SCREEN_HEIGHT,
 		SDL_WINDOW_OPENGL | (FULLSCREEN ? NULL : SDL_WINDOW_RESIZABLE));
 
 	if (window != NULL)
@@ -81,7 +81,7 @@ void GeneralGame::update()
 {
 }
 
-void GeneralGame::updateScene() 
+void GeneralGame::updateScene()
 {
 	for (size_t i = 0; i < Scene.size(); i++)
 	{
@@ -146,5 +146,20 @@ GeneralGame::GeneralGame(int width, int height, char* title)
 }
 
 GeneralGame::~GeneralGame()
+{}
+
+Vector2 operator*(Vector2 const& vect, int scalar)
 {
+	Vector2 result;
+	result.x = vect.x * scalar;
+	result.y = vect.y * scalar;
+	return result;
+}
+
+Vector2 operator*(int scalar, Vector2 const& vect)
+{
+	Vector2 result;
+	result.x = vect.x * scalar;
+	result.y = vect.y * scalar;
+	return result;
 }

@@ -9,7 +9,9 @@
 /.vs/SuperFuckingGame/v16/
 /.vs/
 /Debug/
+/Release/
 /SuperFuckingGame/Debug/
+/SuperFuckingGame/Release/
 *.ipch
 /x64/
 /SuperFuckingGame/x64/
