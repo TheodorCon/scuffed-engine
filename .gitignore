@@ -11,3 +11,5 @@
 /Debug/
 /SuperFuckingGame/Debug/
 *.ipch
+/x64/
+/SuperFuckingGame/x64/
