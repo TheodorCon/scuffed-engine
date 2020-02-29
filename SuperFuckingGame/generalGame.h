@@ -135,15 +135,9 @@ constexpr struct Vector2 VECTOR2_UP = { 0, -1 };
 constexpr struct Vector2 VECTOR2_RIGHT = { 1, 0 };
 constexpr struct Vector2 VECTOR2_LEFT = { -1, 0 };
 
-class RenderFunc
-{
+class GameComponent {
+
 public:
-	RenderFunc(void (*func)(), SDL_Color clr);
-	~RenderFunc();
-
-	void (*rendFunc)();
-
-	SDL_Color color;
 
 private:
 
@@ -152,6 +146,7 @@ private:
 class GameRender
 {
 public:
+	GameRender& renderer = *this;
 	virtual void render(SDL_Renderer* renderer) = 0;
 private:
 
@@ -161,15 +156,28 @@ class GameTransform
 {
 public:
 
-	struct Vector2 transform = { 0,0 };
+	GameTransform& transform = *this;
+	struct Vector2 location = { 0,0 };
+
+
+	virtual void translate(Vector2 vect);
+
+	virtual void translate(int x, int y);
+
 
 private:
 
 };
 
-class GameRigidBody
+class GameBody
 {
 public:
+	float mass;
+	Vector2 velocity;
+	Vector2 acceleration;
+	bool gravity = false;
+
+	void addForce(Vector2 force);
 
 private:
 
@@ -180,8 +188,18 @@ class GameCollider
 
 public:
 
+	SDL_Rect collider = {0,0,0,0};
+	bool check(const GameCollider*, Vector2);
+	Vector2 getCollisionDirection(const GameCollider*, Vector2);
+	Vector2 adjustVelocityForCollision(const GameCollider*, Vector2);
+
 private:
 
+};
+
+struct GamePhysics {
+	GameCollider* collider;
+	GameBody* body;
 };
 
 class GameObject : public GameRender, public GameTransform
@@ -192,7 +210,9 @@ public:
 
 	virtual void initialize() = 0;
 	virtual void update() = 0;
+	void setup();
 
+	GamePhysics* physics = nullptr;
 private:
 
 };
@@ -219,6 +239,7 @@ public:
 
 	SDL_Event event;
 	std::vector<GameObject*> Scene = {};
+	std::vector<GameObject*> PhysicsScene = {};
 
 	virtual bool setup();
 	virtual void start();
@@ -234,4 +255,5 @@ public:
 private:
 	virtual void inputEvent();
 	virtual void updateScene();
+	virtual void updatePhysics();
 };
