@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <stdio.h>
 #include "generalGame.h"
+#include <SDL_ttf.h>
 
 class Player : public GameObject
 {
@@ -192,6 +193,7 @@ public:
 	~MainGame() {};
 
 	Player* player;
+	TTF_Font* font;
 
 	void initialize()
 	{
@@ -214,6 +216,9 @@ public:
 		Platform* platform4 = new Platform({255, 100, 255, 255});
 		platform4->transform.location = { player->transform.location.x - 800 , player->transform.location.y - 50};
 		instantiate(platform4);
+
+		TTF_Init();
+		font = TTF_OpenFont("E:\\default.ttf", 1000);
 	}
 
 	void input()
@@ -222,7 +227,7 @@ public:
 
 	void update()
 	{
-
+		TTF_RenderText_Solid(font, "yo momma", {255,255,255,255});
 	}
 
 private:
