@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "generalGame.h"
 #include <SDL_ttf.h>
+#include <chrono>
 
 class Player : public GameObject
 {
@@ -11,7 +12,7 @@ public:
 	Player();
 	~Player();
 
-	int speed = 6;
+	int speed = 10;
 	bool grounded = true;
 	bool jumping = false;
 	bool falling = false;
@@ -105,6 +106,10 @@ public:
 				physics->body->addForce(VECTOR2_UP * 20);
 			}
 		}
+		if (transform.location.y > 1100)
+		{
+			transform.location.y = -1000;
+		}
 	}
 
 private:
@@ -133,7 +138,7 @@ public:
 	Platform(SDL_Color);
 	~Platform();
 
-	SDL_Color *color;
+	SDL_Color* color;
 
 	void render(SDL_Renderer* renderer)
 	{
@@ -193,32 +198,35 @@ public:
 	~MainGame() {};
 
 	Player* player;
-	TTF_Font* font;
 
 	void initialize()
 	{
+		TTF_Init();
+
 		Vector2 pos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 		player->transform.location = pos;
 		instantiate(player);
 
-		Platform* platform1 = new Platform({255,100,100,255});
+		Platform* platform1 = new Platform({ 255,100,100,255 });
 		platform1->transform.location = { player->transform.location.x - 250, player->transform.location.y + 70 };
 		instantiate(platform1);
 
-		Platform* platform2 = new Platform({100, 255, 100, 255});
+		Platform* platform2 = new Platform({ 100, 255, 100, 255 });
 		platform2->transform.location = { player->transform.location.x + 200, player->transform.location.y - 50 };
 		instantiate(platform2);
 
-		Platform* platform3 = new Platform({100, 100, 255, 255});
-		platform3->transform.location = { player->transform.location.x - 200 , player->transform.location.y - 170};
+		Platform* platform3 = new Platform({ 100, 100, 255, 255 });
+		platform3->transform.location = { player->transform.location.x - 200 , player->transform.location.y - 170 };
 		instantiate(platform3);
 
-		Platform* platform4 = new Platform({255, 100, 255, 255});
-		platform4->transform.location = { player->transform.location.x - 800 , player->transform.location.y - 50};
+		Platform* platform4 = new Platform({ 255, 100, 255, 255 });
+		platform4->transform.location = { player->transform.location.x - 800 , player->transform.location.y - 50 };
 		instantiate(platform4);
 
-		TTF_Init();
-		font = TTF_OpenFont("E:\\default.ttf", 1000);
+		const char* fontPath = "C:\\Users\\Theod\\source\\repos\\Autonomous Learning Area Navigator\\Assets\\Packages\\Standard Assets\\Fonts\\Unipix.ttf";
+		GameUI_FPSCounter *fpsCounter = new GameUI_FPSCounter("", { 10, 10, 50, 50 }, fontPath, 50);
+		fpsCounter->setColor({ 55, 55, 255, 255 });
+		instantiate(fpsCounter);
 	}
 
 	void input()
@@ -227,7 +235,6 @@ public:
 
 	void update()
 	{
-		TTF_RenderText_Solid(font, "yo momma", {255,255,255,255});
 	}
 
 private:

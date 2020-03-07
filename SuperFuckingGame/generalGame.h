@@ -1,5 +1,8 @@
 #include <SDL.h>
-#include "vector"
+#include <SDL_ttf.h>
+#include <vector>
+#include <string>
+#include <chrono>
 
 #pragma once
 
@@ -188,7 +191,7 @@ class GameCollider
 
 public:
 
-	SDL_Rect collider = {0,0,0,0};
+	SDL_Rect collider = { 0,0,0,0 };
 	bool check(const GameCollider*, Vector2);
 	Vector2 getCollisionDirection(const GameCollider*, Vector2);
 	Vector2 adjustVelocityForCollision(const GameCollider*, Vector2);
@@ -222,10 +225,10 @@ class GeneralGame
 public:
 	GeneralGame();
 	GeneralGame(int width, int height);
-	GeneralGame(int width, int height, char* title);
+	GeneralGame(int width, int height, const char* title);
 	~GeneralGame();
 
-	char* TITLE;
+	const char* TITLE;
 	int SCREEN_HEIGHT;
 	int SCREEN_WIDTH;
 	bool FULLSCREEN = false;
@@ -256,4 +259,48 @@ private:
 	virtual void inputEvent();
 	virtual void updateScene();
 	virtual void updatePhysics();
+};
+
+class GameUI_Text : public GameObject
+{
+public:
+
+	TTF_Font* font;
+
+	GameUI_Text(const char* txt, SDL_Rect destination, TTF_Font* font, int fontSize);
+	GameUI_Text(const char* txt, SDL_Rect destination, const char* fontPath, int fontSize);
+	~GameUI_Text();
+
+	void initialize();
+	void render(SDL_Renderer* renderer);
+	void update();
+
+	void translate(Vector2);
+	void translate(int x, int y);
+
+	void setText(const char* txt);
+	void setColor(SDL_Color color);
+
+private:
+
+	SDL_Rect* destination;
+	SDL_Surface* surface = nullptr;
+	SDL_Texture* texture = nullptr;
+	SDL_Color* color;
+	std::string* text;
+	void updateTexture(SDL_Renderer* renderer);
+};
+
+class GameUI_FPSCounter : public GameUI_Text {
+public:
+	size_t currentFrames;
+	clock_t lastSecond;
+
+	GameUI_FPSCounter(const char* txt, SDL_Rect destination, const char* fontPath, int fontSize);
+	GameUI_FPSCounter(const char* txt, SDL_Rect destination, TTF_Font* font, int fontSize);
+
+	void initialize();
+	void update();
+
+private:
 };

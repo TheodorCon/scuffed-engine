@@ -196,7 +196,7 @@ GeneralGame::GeneralGame(int width, int height)
 	TITLE = const_cast<char*>(untitledName);
 }
 
-GeneralGame::GeneralGame(int width, int height, char* title)
+GeneralGame::GeneralGame(int width, int height, const char* title)
 {
 	SCREEN_WIDTH = width;
 	SCREEN_HEIGHT = height;
@@ -295,7 +295,7 @@ Vector2 GameCollider::adjustVelocityForCollision(const GameCollider* secondColli
 			adjusted.x = collider.x - (second.x + second.w);
 		}
 	}
-	
+
 	if (vY > 0)
 	{
 		if (collider.y + collider.h <= second.y)
@@ -326,4 +326,113 @@ void GameObject::setup()
 		physics->collider->collider.x = transform.location.x;
 		physics->collider->collider.y = transform.location.y;
 	}
+}
+
+void GameUI_Text::updateTexture(SDL_Renderer* renderer)
+{
+	surface = TTF_RenderText_Solid(font, text->c_str(), *color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+}
+
+void GameUI_Text::setText(const char* txt)
+{
+	text->assign(txt);
+	surface = nullptr;
+	texture = nullptr;
+}
+
+void GameUI_Text::setColor(SDL_Color clr)
+{
+	color->r = clr.r;
+	color->g = clr.g;
+	color->b = clr.b;
+	color->a = clr.a;
+	surface = nullptr;
+	texture = nullptr;
+}
+
+void GameUI_Text::render(SDL_Renderer* renderer)
+{
+	if (!(surface && texture))
+	{
+		updateTexture(renderer);
+	}
+	SDL_RenderCopy(renderer, texture, NULL, destination);
+}
+
+void GameUI_Text::translate(Vector2 vect)
+{
+	this->destination->x += vect.x;
+	this->destination->y += vect.y;
+	transform.translate(vect);
+}
+
+void GameUI_Text::translate(int x, int y)
+{
+	this->destination->x += x;
+	this->destination->y += y;
+	transform.translate(x, y);
+}
+
+void GameUI_Text::initialize()
+{
+
+}
+
+void GameUI_Text::update()
+{
+
+}
+
+GameUI_Text::GameUI_Text(const char* txt, SDL_Rect dest, TTF_Font* fnt, int fontSize)
+{
+	color = new SDL_Color({ 255,255,255,255 });
+	font = fnt;
+	destination = new SDL_Rect(dest);
+	text = new std::string(txt);
+}
+
+GameUI_Text::GameUI_Text(const char* txt, SDL_Rect dest, const char* fontPath, int fontSize)
+{
+	color = new SDL_Color({ 255,255,255,255 });
+	font = TTF_OpenFont(fontPath, fontSize);
+	destination = new SDL_Rect(dest);
+	text = new std::string(txt);
+}
+
+GameUI_Text::~GameUI_Text()
+{
+	TTF_CloseFont(font);
+}
+
+GameUI_FPSCounter::GameUI_FPSCounter(const char* txt, SDL_Rect destination, const char* fontPath, int fontSize)
+	: GameUI_Text(txt, destination, fontPath, fontSize)
+{
+	lastSecond = clock();
+	currentFrames = 0;
+}
+
+GameUI_FPSCounter::GameUI_FPSCounter(const char* txt, SDL_Rect destination, TTF_Font* font, int fontSize)
+	: GameUI_Text(txt, destination, font, fontSize)
+{
+	lastSecond = clock();
+	currentFrames = 0;
+}
+
+void GameUI_FPSCounter::initialize()
+{
+	lastSecond = clock();
+}
+
+void GameUI_FPSCounter::update()
+{
+	const clock_t tempSeconds = clock();
+	if (tempSeconds - lastSecond >= 1000)
+	{
+		lastSecond = tempSeconds;
+		setText(std::to_string(currentFrames).c_str());
+		//std::cout << currentFrames << std::endl;
+		currentFrames = 0;
+	}
+	currentFrames++;
 }
