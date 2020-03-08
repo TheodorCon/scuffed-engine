@@ -110,6 +110,14 @@ public:
 		{
 			transform.location.y = -1000;
 		}
+		if (transform.location.x < 0)
+		{
+			transform.location.x = 1920;
+		}
+		if (transform.location.x > 1920)
+		{
+			transform.location.x = 0;
+		}
 	}
 
 private:
@@ -212,7 +220,7 @@ public:
 		instantiate(platform1);
 
 		Platform* platform2 = new Platform({ 100, 255, 100, 255 });
-		platform2->transform.location = { player->transform.location.x + 200, player->transform.location.y - 50 };
+		platform2->transform.location = { player->transform.location.x + 500, player->transform.location.y - 50 };
 		instantiate(platform2);
 
 		Platform* platform3 = new Platform({ 100, 100, 255, 255 });
@@ -223,8 +231,9 @@ public:
 		platform4->transform.location = { player->transform.location.x - 800 , player->transform.location.y - 50 };
 		instantiate(platform4);
 
-		const char* fontPath = "C:\\Users\\Theod\\source\\repos\\Autonomous Learning Area Navigator\\Assets\\Packages\\Standard Assets\\Fonts\\Unipix.ttf";
-		GameUI_FPSCounter *fpsCounter = new GameUI_FPSCounter("", { 10, 10, 50, 50 }, fontPath, 50);
+		//const char* fontPath = "C:\\Users\\Theod\\source\\repos\\Autonomous Learning Area Navigator\\Assets\\Packages\\Standard Assets\\Fonts\\Unipix.ttf";
+		const char* fontPath = "./default.ttf";
+		GameUI_FPSCounter* fpsCounter = new GameUI_FPSCounter("", { 10, 10, 50, 50 }, fontPath, 1000);
 		fpsCounter->setColor({ 55, 55, 255, 255 });
 		instantiate(fpsCounter);
 	}
@@ -240,12 +249,11 @@ public:
 private:
 
 };
+
 int main(int argc, char* argv[])
 {
 	MainGame* game = new MainGame();
-
 	game->start();
 	game->quit();
-
 	return 0;
 }

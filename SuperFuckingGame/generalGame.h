@@ -6,9 +6,6 @@
 
 #pragma once
 
-#ifndef GeneralGame
-#endif
-
 struct Vector2
 {
 	int x = 0;
