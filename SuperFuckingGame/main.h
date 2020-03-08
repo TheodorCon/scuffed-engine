@@ -252,8 +252,8 @@ private:
 
 int main(int argc, char* argv[])
 {
-	MainGame* game = new MainGame();
-	game->start();
-	game->quit();
+	MainGame game;
+	game.start();
+	game.quit();
 	return 0;
 }
